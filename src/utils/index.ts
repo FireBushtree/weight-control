@@ -1,3 +1,3 @@
 export function keep2decimals(val: number) {
-  return val.toFixed(2)
+  return Number(val.toFixed(2))
 }
