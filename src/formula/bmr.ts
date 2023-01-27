@@ -1,3 +1,5 @@
+import { keep2decimals } from "@/utils"
+
 export interface CalcBMROptions {
   /**
    * human's height, unit - cm
@@ -23,7 +25,7 @@ export function calcBMR(options: CalcBMROptions & { gender: 'man' | 'woman' }) {
 
   const calcFunc = funcMap[gender]
   const val = calcFunc(rest)
-  return val.toFixed(2)
+  return keep2decimals(val)
 }
 
 export function calcMenBMR(options: CalcBMROptions) {
