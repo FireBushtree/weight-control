@@ -1,4 +1,4 @@
-import { keep2decimals } from '@/utils';
+import { keep2decimals } from '@/utils'
 
 export const TDEECoefficient = {
   /**
@@ -24,10 +24,10 @@ export const TDEECoefficient = {
   /**
    * 非常高度活动 - 几乎无时无刻不在运动， 比如建筑工地工人
    */
-  VERY_HIGHT_ACTIVITY: 1.9,
-};
+  VERY_HIGHT_ACTIVITY: 1.9
+}
 
-export function calcTDEE(bmr: number, coefficient: keyof typeof TDEECoefficient) {
+export function calcTDEE (bmr: number, coefficient: keyof typeof TDEECoefficient): number {
   const target = TDEECoefficient[coefficient]
-  return keep2decimals(bmr * target);
+  return keep2decimals(bmr * target)
 }

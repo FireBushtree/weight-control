@@ -1,4 +1,4 @@
-import { keep2decimals } from "@/utils"
+import { keep2decimals } from '@/utils'
 
 export interface CalcBMROptions {
   /**
@@ -16,7 +16,7 @@ export interface CalcBMROptions {
 /**
  * BMR formual source https://zhuanlan.zhihu.com/p/137357908
  */
-export function calcBMR(options: CalcBMROptions & { gender: 'man' | 'woman' }) {
+export function calcBMR (options: CalcBMROptions & { gender: 'man' | 'woman' }): number {
   const funcMap = {
     man: calcMenBMR,
     woman: calcWomenBMR
@@ -28,12 +28,12 @@ export function calcBMR(options: CalcBMROptions & { gender: 'man' | 'woman' }) {
   return keep2decimals(val)
 }
 
-export function calcMenBMR(options: CalcBMROptions) {
+export function calcMenBMR (options: CalcBMROptions): number {
   const { weight, height, age } = options
   return 13.7 * weight + 5 * height - 6.8 * age + 66
 }
 
-export function calcWomenBMR(options: CalcBMROptions) {
+export function calcWomenBMR (options: CalcBMROptions): number {
   const { weight, height, age } = options
   return 9.6 * weight + 1.8 * height - 4.7 * age + 655
 }
