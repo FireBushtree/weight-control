@@ -23,5 +23,6 @@ module.exports = {
     }
   },
   rules: {
+    'react/jsx-indent': ['error', 2]
   }
 }

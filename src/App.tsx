@@ -1,4 +1,5 @@
 import React from 'react'
+import { Button } from 'tdesign-react'
 import { calcBMR } from './formula'
 
 function App (): JSX.Element {
@@ -8,8 +9,8 @@ function App (): JSX.Element {
   )
 
   return (
-    <div className='app'>
-      weight-control
+    <div className="app">
+      <Button>确定</Button>
     </div>
   )
 }
