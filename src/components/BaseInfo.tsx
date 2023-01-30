@@ -10,7 +10,19 @@ import {
 const { FormItem } = Form
 const BASE_INFO_STORAGE_KEY = 'wc-base-info'
 
-export default function BaseInfo (): JSX.Element {
+export interface BMROptions {
+  gender: Gender
+  age: number
+  height: number
+  weight: number
+}
+
+export interface BaseInfoProps {
+  onChange?: (form: BMROptions, hasTdee: boolean) => void
+}
+
+const BaseInfo: React.FC<BaseInfoProps> = (props: BaseInfoProps) => {
+  const { onChange } = props
   const [form] = Form.useForm()
   const gender: Gender = Form.useWatch('gender', form)
   const age: number = Form.useWatch('age', form)
@@ -18,14 +30,18 @@ export default function BaseInfo (): JSX.Element {
   const weight: number = Form.useWatch('weight', form)
   const frequency: TDEECoefficientKeys = Form.useWatch('frequency', form)
 
-  const needCalcBMR = gender && age && height && weight
-  const needCalcTdee = needCalcBMR && frequency
+  const needCalcBMR = !!(gender && age && height && weight)
+  const needCalcTdee = !!(needCalcBMR && frequency)
 
   const bmrOptions = { gender, age, height, weight }
   const bmr = needCalcBMR
     ? calcBMR(bmrOptions)
     : undefined
   const tdee = needCalcTdee ? calcTDEE(bmr as number, frequency) : undefined
+
+  useEffect(() => {
+    onChange?.(bmrOptions, needCalcTdee)
+  }, [needCalcTdee])
 
   useEffect(() => {
     const baseInfoStr = localStorage.getItem(BASE_INFO_STORAGE_KEY)
@@ -114,3 +130,5 @@ export default function BaseInfo (): JSX.Element {
     </div>
   )
 }
+
+export default BaseInfo
