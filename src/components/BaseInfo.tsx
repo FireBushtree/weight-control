@@ -7,6 +7,7 @@ import {
   TDEECoefficientKeys,
   TDEEOptions
 } from '@/formula'
+import { keep2decimals } from '@/utils'
 const { FormItem } = Form
 const BASE_INFO_STORAGE_KEY = 'wc-base-info'
 
@@ -38,6 +39,7 @@ const BaseInfo: React.FC<BaseInfoProps> = (props: BaseInfoProps) => {
     ? calcBMR(bmrOptions)
     : undefined
   const tdee = needCalcTdee ? calcTDEE(bmr as number, frequency) : undefined
+  const intake = tdee ? keep2decimals(tdee - 500) : undefined
 
   useEffect(() => {
     onChange?.(bmrOptions, needCalcTdee)
@@ -84,7 +86,7 @@ const BaseInfo: React.FC<BaseInfoProps> = (props: BaseInfoProps) => {
         {needCalcBMR && (
           <FormItem label="BMR">
             <span
-              className="flex justify-center mr-1 font-800 text-white"
+              className="w-heat-number mr-1 heat-number"
               style={{ width: '80px', background: '#000' }}
             >
               {bmr}
@@ -97,7 +99,7 @@ const BaseInfo: React.FC<BaseInfoProps> = (props: BaseInfoProps) => {
           <>
             <FormItem label="TDEE">
               <span
-                className="flex justify-center mr-1 font-800 text-white"
+                className="w-heat-number mr-1 heat-number"
                 style={{ width: '80px', background: '#000' }}
               >
                 {tdee}
@@ -107,7 +109,7 @@ const BaseInfo: React.FC<BaseInfoProps> = (props: BaseInfoProps) => {
 
             <FormItem label="热量缺口">
               <span
-                className="flex justify-center mr-1 font-800 text-white"
+                className="w-heat-number mr-1 heat-number"
                 style={{ width: '80px', background: 'rgb(248, 113, 113)' }}
               >
                 - 500
@@ -117,10 +119,10 @@ const BaseInfo: React.FC<BaseInfoProps> = (props: BaseInfoProps) => {
 
             <FormItem label="饮食摄入">
               <span
-                className="flex justify-center mr-1 font-800 text-white"
+                className="w-heat-number mr-1 heat-number"
                 style={{ width: '80px', background: 'rgb(110, 231, 183)' }}
               >
-                {(tdee as number) - 500}
+                {intake}
               </span>
               卡路里
             </FormItem>

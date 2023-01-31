@@ -8,7 +8,15 @@ import usePluginImport from 'vite-plugin-importer'
 export default defineConfig({
   plugins: [
     react(),
-    UnoCSS({}),
+    UnoCSS({
+      rules: [
+        ['w-heat-number', { width: '80px' }],
+        ['intake-block', { width: '120px' }]
+      ],
+      shortcuts: {
+        'heat-number': 'text-white font-800 flex justify-center',
+      },
+    }),
     usePluginImport({
       libraryName: 'tdesign-react',
       libraryDirectory: 'es',
