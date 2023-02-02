@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Form, Select } from 'tdesign-react'
+import { Button, Form, InputNumber, Select } from 'tdesign-react'
 import { MinusCircleIcon } from 'tdesign-icons-react'
 import { groupFoodOptions } from '@/constants/food'
 const { FormItem, FormList } = Form
@@ -7,13 +7,15 @@ const { Option, OptionGroup } = Select
 
 const FoodForm: React.FC = (): JSX.Element => {
   const { protein, fat, carbon } = groupFoodOptions
+  const [form] = Form.useForm()
+
   return (
-    <Form>
+    <Form form={form}>
       <FormList name="breakfast">
         {(fields, { add, remove }) => (
           <>
             {fields.map(({ name, key }) => (
-              <FormItem key={key}>
+              <FormItem key={key} >
                 <FormItem>
                   <Select
                   >
@@ -36,10 +38,15 @@ const FoodForm: React.FC = (): JSX.Element => {
                 </FormItem>
 
                 <FormItem>
+                  <InputNumber suffix="g" />
                 </FormItem>
 
                 <FormItem>
                   <MinusCircleIcon size="20px" className='cursor-pointer' onClick={() => { remove(name) }} />
+                </FormItem>
+
+                <FormItem>
+                  <span>{name}</span>
                 </FormItem>
               </FormItem>
             ))}
