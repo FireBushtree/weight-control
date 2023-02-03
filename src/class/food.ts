@@ -22,17 +22,17 @@ export default class Food {
   name: string
   classify: FoodClassify
 
-  // per 100 g
+  // per g
   constructor (options: FoodOptions) {
     const { carbon, protein, fat, name, classify } = options
 
     this.name = name
-    this.carbon = carbon
-    this.protein = protein
-    this.fat = fat
+    this.carbon = keep2decimals(carbon / 100)
+    this.protein = keep2decimals(protein / 100)
+    this.fat = keep2decimals(fat / 100)
     this.classify = classify
     this.heat = keep2decimals(
-      HEAT_CARBON * carbon + HEAT_PROTEIN * protein + HEAT_FAT * fat
+      HEAT_CARBON * this.carbon + HEAT_PROTEIN * this.protein + HEAT_FAT * this.fat
     )
   }
 }

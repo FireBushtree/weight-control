@@ -1,15 +1,16 @@
-import { FoodClassify } from '@/class/food'
+import Food, { FoodClassify } from '@/class/food'
 import * as foodList from './food'
 
 export interface Option {
   label: string
   value: string
+  origin: Food
 }
 
 function genFoodOptions (): Option[] {
   const array = []
   for (const [key, value] of Object.entries(foodList)) {
-    array.push({ label: value.name, value: key })
+    array.push({ label: value.name, value: key, origin: value })
   }
 
   return array
@@ -23,10 +24,15 @@ function genGroupFoodOptions (): Record<FoodClassify, Option[]> {
   }
   for (const [key, value] of Object.entries(foodList)) {
     const { classify } = value
-    result[classify].push({ label: value.name, value: key })
+    result[classify].push({ label: value.name, value: key, origin: value })
   }
 
   return result
+}
+
+export function getFoodByName (name: string): Food | undefined {
+  const food = foodOptions.find(item => item.value === name)
+  return food?.origin
 }
 
 export const foodOptions = genFoodOptions()

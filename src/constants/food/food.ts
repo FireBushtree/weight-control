@@ -9,3 +9,4 @@ export const chickenChest = new Food({ carbon: 0.6, protein: 24, fat: 1.9, name:
 // carbon
 export const rawRice = new Food({ carbon: 77.2, protein: 7.9, fat: 0.9, name: '生米饭', classify: 'carbon' })
 export const potato = new Food({ carbon: 17.8, protein: 2.6, fat: 0.2, name: '土豆', classify: 'carbon' })
+export const oat = new Food({ carbon: 58, protein: 11, fat: 7.1, name: '燕麦', classify: 'carbon' })
