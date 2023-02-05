@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Form, InputNumber, Select, Tooltip } from 'tdesign-react'
 import { MinusCircleIcon } from 'tdesign-icons-react'
 import { getFoodByName, groupFoodOptions } from '@/constants/food'
@@ -27,6 +27,7 @@ export interface FoodFormProps {
 const FoodForm: React.FC<FoodFormProps> = ({ name }): JSX.Element => {
   const storeKey = `${FOOD_FORM_PREFIX}${name}`
   const { protein, fat, carbon } = groupFoodOptions
+  const [total, setTotal] = useState<number>()
   const [form] = Form.useForm()
   const rows: undefined | FormRow[] = Form.useWatch('rows', form)
   const heatRows: PatchedFormRow[] = (rows ?? []).map(item => {
@@ -58,6 +59,13 @@ const FoodForm: React.FC<FoodFormProps> = ({ name }): JSX.Element => {
 
   useEffect(() => {
     localStorage.setItem(storeKey, JSON.stringify(rows))
+
+    let total = 0
+    heatRows.forEach((item) => {
+      total += item.heat ?? 0
+    })
+
+    setTotal(total)
   }, [rows])
 
   return (
@@ -125,6 +133,10 @@ const FoodForm: React.FC<FoodFormProps> = ({ name }): JSX.Element => {
                 </FormItem>
               </FormItem>
             ))}
+
+            <FormItem>
+              <span className='intake-block heat-number bg-lime-400'>{ total }卡路里</span>
+            </FormItem>
 
             <FormItem>
               <Button
