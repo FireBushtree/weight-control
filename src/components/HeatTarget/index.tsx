@@ -1,8 +1,14 @@
 import { Energy } from '@/App'
-import { TEXT_CARBON, TEXT_FAT, TEXT_PROTEIN } from '@/constants/text'
+import { TEXT_CALORIE, TEXT_CARBON, TEXT_FAT, TEXT_PROTEIN } from '@/constants/text'
 import { keep2decimals } from '@/utils'
 import React, { useEffect } from 'react'
 import { Form, InputNumber } from 'tdesign-react'
+import { useLocalStorageState } from 'ahooks'
+
+const PROTEIN_PER_G_STORAGE_KEY = 'wc-protein-per-g'
+const CARBON_PER_G_STORAGE_KEY = 'wc-carbon-per-g'
+const FAT_PER_G_STORAGE_KEY = 'wc-fat-per-g'
+
 const { FormItem } = Form
 
 export interface HeatTargetProps {
@@ -12,6 +18,26 @@ export interface HeatTargetProps {
 
 export default function HeatTarget (props: HeatTargetProps): JSX.Element {
   const { weight, setEnergy } = props
+
+  const [proteinVal, setProteinVal] = useLocalStorageState<number>(
+    PROTEIN_PER_G_STORAGE_KEY,
+    {
+      defaultValue: 1.2
+    }
+  )
+  const [carbonVal, setCarbonVal] = useLocalStorageState<number>(
+    CARBON_PER_G_STORAGE_KEY,
+    {
+      defaultValue: 2
+    }
+  )
+  const [fatVal, setFatVal] = useLocalStorageState<number>(
+    FAT_PER_G_STORAGE_KEY,
+    {
+      defaultValue: 0.8
+    }
+  )
+
   const [form] = Form.useForm()
   const proteinPerg = Form.useWatch('protein', form)
   const protein = keep2decimals(weight * proteinPerg)
@@ -43,6 +69,18 @@ export default function HeatTarget (props: HeatTargetProps): JSX.Element {
     fatHeat
   ])
 
+  useEffect(() => {
+    setProteinVal(proteinPerg)
+  }, [proteinPerg])
+
+  useEffect(() => {
+    setCarbonVal(carbonPerg)
+  }, [carbonPerg])
+
+  useEffect(() => {
+    setFatVal(fatPerg)
+  }, [fatPerg])
+
   const nutrientList = [
     {
       label: TEXT_PROTEIN,
@@ -50,7 +88,7 @@ export default function HeatTarget (props: HeatTargetProps): JSX.Element {
       weight: protein,
       calorie: proteinHeat,
       class: 'bg-protein',
-      initialData: 1.2
+      initialData: proteinVal
     },
     {
       label: TEXT_CARBON,
@@ -58,7 +96,7 @@ export default function HeatTarget (props: HeatTargetProps): JSX.Element {
       weight: carbon,
       calorie: carbonHeat,
       class: 'bg-carbon',
-      initialData: 2
+      initialData: carbonVal
     },
     {
       label: TEXT_FAT,
@@ -66,7 +104,7 @@ export default function HeatTarget (props: HeatTargetProps): JSX.Element {
       weight: fat,
       calorie: fatHeat,
       class: 'bg-fat',
-      initialData: 0.8
+      initialData: fatVal
     }
   ]
   return (
@@ -86,7 +124,7 @@ export default function HeatTarget (props: HeatTargetProps): JSX.Element {
             </span>
             <span>≈</span>
             <span className={`ml-2 px intake-block heat-number ${item.class}`}>
-              {item.calorie}卡路里
+              {item.calorie} {TEXT_CALORIE}
             </span>
           </FormItem>
         ))}

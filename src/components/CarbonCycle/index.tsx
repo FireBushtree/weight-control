@@ -146,13 +146,13 @@ export default function DailyDiet (props: DailyDietProps): JSX.Element {
         borderless
         expandIconPlacement="right"
       >
-        <Panel header="低碳" value="low">
+        <Panel header="低碳日" value="low">
           {renderInTakeBlock(lowCarbonDayList)}
         </Panel>
-        <Panel header="中碳" value="middle">
+        <Panel header="中碳日" value="middle">
           {renderInTakeBlock(middleCarbonDayList)}
         </Panel>
-        <Panel header="高碳" value="high">
+        <Panel header="高碳日" value="high">
           {renderInTakeBlock(highCarbonDayList)}
         </Panel>
       </Collapse>
