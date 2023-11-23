@@ -11,10 +11,14 @@ export default defineConfig({
     UnoCSS({
       rules: [
         ['w-heat-number', { width: '80px' }],
-        ['intake-block', { width: '120px', 'border-radius': '2px' }]
+        ['intake-block', { width: '120px', 'border-radius': '2px' }],
       ],
       shortcuts: {
         'heat-number': 'text-white font-800 flex justify-center',
+        'bg-protein': 'bg-cyan-400',
+        'bg-carbon': 'bg-yellow-400',
+        'bg-fat': 'bg-rose-400',
+        'bg-calorie': 'bg-emerald-300'
       },
     }),
     usePluginImport({

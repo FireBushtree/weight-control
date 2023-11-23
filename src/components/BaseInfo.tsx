@@ -119,8 +119,8 @@ const BaseInfo: React.FC<BaseInfoProps> = (props: BaseInfoProps) => {
 
             <FormItem label="饮食摄入">
               <span
-                className="w-heat-number mr-1 heat-number"
-                style={{ width: '80px', background: 'rgb(110, 231, 183)' }}
+                className="w-heat-number mr-1 heat-number bg-calorie"
+                style={{ width: '80px' }}
               >
                 {intake}
               </span>

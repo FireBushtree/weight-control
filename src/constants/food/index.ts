@@ -7,6 +7,10 @@ export interface Option {
   origin: Food
 }
 
+export const PROTEIN_CALORIE_PER_G = 4
+export const CARBON_CALORIE_PER_G = 4
+export const FAT_CALORIE_PER_G = 9
+
 function genFoodOptions (): Option[] {
   const array = []
   for (const [key, value] of Object.entries(foodList)) {

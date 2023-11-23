@@ -15,7 +15,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tdesign-react": "^0.45.4",
-    "unocss": "^0.49.1",
+    "unocss": "^0.57.7",
     "vite-plugin-importer": "^0.2.5"
   },
   "devDependencies": {

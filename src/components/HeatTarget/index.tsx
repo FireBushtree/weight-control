@@ -1,4 +1,5 @@
 import { Energy } from '@/App'
+import { TEXT_CARBON, TEXT_FAT, TEXT_PROTEIN } from '@/constants/text'
 import { keep2decimals } from '@/utils'
 import React, { useEffect } from 'react'
 import { Form, InputNumber } from 'tdesign-react'
@@ -44,27 +45,27 @@ export default function HeatTarget (props: HeatTargetProps): JSX.Element {
 
   const nutrientList = [
     {
-      label: '蛋白质',
+      label: TEXT_PROTEIN,
       name: 'protein',
       weight: protein,
       calorie: proteinHeat,
-      class: 'bg-cyan-400',
+      class: 'bg-protein',
       initialData: 1.2
     },
     {
-      label: '碳水',
+      label: TEXT_CARBON,
       name: 'carbon',
       weight: carbon,
       calorie: carbonHeat,
-      class: 'bg-yellow-400',
+      class: 'bg-carbon',
       initialData: 2
     },
     {
-      label: '脂肪',
+      label: TEXT_FAT,
       name: 'fat',
       weight: fat,
       calorie: fatHeat,
-      class: 'bg-rose-400',
+      class: 'bg-fat',
       initialData: 0.8
     }
   ]
