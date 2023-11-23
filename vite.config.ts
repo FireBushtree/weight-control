@@ -11,7 +11,7 @@ export default defineConfig({
     UnoCSS({
       rules: [
         ['w-heat-number', { width: '80px' }],
-        ['intake-block', { width: '120px', 'border-radius': '2px' }],
+        ['intake-block', { width: '120px', 'border-radius': '2px', 'padding': '2px 0' }],
       ],
       shortcuts: {
         'heat-number': 'text-white font-800 flex justify-center',
