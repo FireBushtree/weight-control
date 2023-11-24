@@ -77,7 +77,7 @@ const BaseInfo: React.FC<BaseInfoProps> = (props: BaseInfoProps) => {
     if (bmrOptions) {
       onChange?.(bmrOptions, needCalcTdee)
     }
-  }, [needCalcTdee])
+  }, [needCalcTdee, bmrOptions])
 
   return (
     <div className="base-info">
