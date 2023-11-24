@@ -1,15 +1,19 @@
 import { Energy } from '@/App'
-import { TEXT_CALORIE, TEXT_CARBON, TEXT_FAT, TEXT_PROTEIN } from '@/constants/text'
+import {
+  TEXT_CALORIE,
+  TEXT_CARBON,
+  TEXT_FAT,
+  TEXT_PROTEIN
+} from '@/constants/text'
 import { keep2decimals } from '@/utils'
 import React, { useEffect } from 'react'
-import { Form, InputNumber } from 'tdesign-react'
+import { InputNumber, InputNumberValue } from 'tdesign-react'
 import { useLocalStorageState } from 'ahooks'
+import Field from '@/lib/Field'
 
 const PROTEIN_PER_G_STORAGE_KEY = 'wc-protein-per-g'
 const CARBON_PER_G_STORAGE_KEY = 'wc-carbon-per-g'
 const FAT_PER_G_STORAGE_KEY = 'wc-fat-per-g'
-
-const { FormItem } = Form
 
 export interface HeatTargetProps {
   weight: number
@@ -25,30 +29,32 @@ export default function HeatTarget (props: HeatTargetProps): JSX.Element {
       defaultValue: 1.2
     }
   )
+  const handleSetProteinVal = (val: InputNumberValue): void =>
+    setProteinVal(val as number)
   const [carbonVal, setCarbonVal] = useLocalStorageState<number>(
     CARBON_PER_G_STORAGE_KEY,
     {
       defaultValue: 2
     }
   )
+  const handleSetCarbonVal = (val: InputNumberValue): void =>
+    setCarbonVal(val as number)
   const [fatVal, setFatVal] = useLocalStorageState<number>(
     FAT_PER_G_STORAGE_KEY,
     {
       defaultValue: 0.8
     }
   )
+  const handleSetFatVal = (val: InputNumberValue): void =>
+    setFatVal(val as number)
 
-  const [form] = Form.useForm()
-  const proteinPerg = Form.useWatch('protein', form)
-  const protein = keep2decimals(weight * proteinPerg)
+  const protein = keep2decimals(weight * (proteinVal as number))
   const proteinHeat = keep2decimals(protein * 4)
 
-  const carbonPerg = Form.useWatch('carbon', form)
-  const carbon = keep2decimals(weight * carbonPerg)
+  const carbon = keep2decimals(weight * (carbonVal as number))
   const carbonHeat = keep2decimals(carbon * 4)
 
-  const fatPerg = Form.useWatch('fat', form)
-  const fat = keep2decimals(weight * fatPerg)
+  const fat = keep2decimals(weight * (fatVal as number))
   const fatHeat = keep2decimals(fat * 9)
 
   useEffect(() => {
@@ -60,26 +66,7 @@ export default function HeatTarget (props: HeatTargetProps): JSX.Element {
       fat,
       fatHeat
     })
-  }, [
-    protein,
-    proteinHeat,
-    carbon,
-    carbonHeat,
-    fat,
-    fatHeat
-  ])
-
-  useEffect(() => {
-    setProteinVal(proteinPerg)
-  }, [proteinPerg])
-
-  useEffect(() => {
-    setCarbonVal(carbonPerg)
-  }, [carbonPerg])
-
-  useEffect(() => {
-    setFatVal(fatPerg)
-  }, [fatPerg])
+  }, [protein, proteinHeat, carbon, carbonHeat, fat, fatHeat])
 
   const nutrientList = [
     {
@@ -88,7 +75,8 @@ export default function HeatTarget (props: HeatTargetProps): JSX.Element {
       weight: protein,
       calorie: proteinHeat,
       class: 'bg-protein',
-      initialData: proteinVal
+      value: proteinVal,
+      onChange: handleSetProteinVal
     },
     {
       label: TEXT_CARBON,
@@ -96,7 +84,8 @@ export default function HeatTarget (props: HeatTargetProps): JSX.Element {
       weight: carbon,
       calorie: carbonHeat,
       class: 'bg-carbon',
-      initialData: carbonVal
+      value: carbonVal,
+      onChange: handleSetCarbonVal
     },
     {
       label: TEXT_FAT,
@@ -104,31 +93,42 @@ export default function HeatTarget (props: HeatTargetProps): JSX.Element {
       weight: fat,
       calorie: fatHeat,
       class: 'bg-fat',
-      initialData: fatVal
+      value: fatVal,
+      onChange: handleSetFatVal
     }
   ]
   return (
     <div className="heat-target">
-      <Form form={form}>
+      <div>
         {nutrientList.map((item) => (
-          <FormItem
+          <Field
             key={item.label}
-            initialData={item.initialData}
             label={item.label}
-            name={item.name}
+            width="100px"
+            textAlign="right"
           >
-            <span className="mr-2">每公斤体重摄入</span>
-            <InputNumber className='flex-1' suffix="g" step={0.1} />
-            <span className={`ml-2 mr-2 px intake-block heat-number ${item.class}`}>
+            <span className="mr-2 font-size-14px">每公斤体重摄入</span>
+            <InputNumber
+              value={item.value}
+              onChange={item.onChange}
+              className="flex-1"
+              suffix="g"
+              step={0.1}
+            />
+            <span
+              className={`font-size-14px ml-2 mr-2 px intake-block heat-number ${item.class}`}
+            >
               {item.weight}g {item.label}
             </span>
             <span>≈</span>
-            <span className={`ml-2 px intake-block heat-number ${item.class}`}>
+            <span
+              className={`font-size-14px ml-2 px intake-block heat-number ${item.class}`}
+            >
               {item.calorie} {TEXT_CALORIE}
             </span>
-          </FormItem>
+          </Field>
         ))}
-      </Form>
+      </div>
     </div>
   )
 }

@@ -21,7 +21,7 @@ const Field: React.FC<FieldProps> = (props: FieldProps) => {
       <div className={`${textAlignStyle} p-r-24px font-size-14px`} style={{ width }}>
         {label}
       </div>
-      <div className="flex">{children}</div>
+      <div className="flex flex-1 items-center">{children}</div>
     </div>
   )
 }
