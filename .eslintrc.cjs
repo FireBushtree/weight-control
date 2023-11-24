@@ -25,6 +25,7 @@ module.exports = {
   rules: {
     'react/jsx-indent': ['error', 2],
     '@typescript-eslint/consistent-type-imports': 'off',
-    '@typescript-eslint/strict-boolean-expressions': 'off'
+    '@typescript-eslint/strict-boolean-expressions': 'off',
+    '@typescript-eslint/no-confusing-void-expression': 'off'
   }
 }

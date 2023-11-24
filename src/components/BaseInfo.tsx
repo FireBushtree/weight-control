@@ -1,5 +1,13 @@
 import React, { useEffect } from 'react'
-import { Divider, Form, InputNumber, Radio, Select } from 'tdesign-react'
+import {
+  Divider,
+  InputNumber,
+  InputNumberValue,
+  Radio,
+  RadioValue,
+  Select,
+  SelectValue
+} from 'tdesign-react'
 import {
   calcBMR,
   calcTDEE,
@@ -8,8 +16,15 @@ import {
   TDEEOptions
 } from '@/formula'
 import { keep2decimals } from '@/utils'
-const { FormItem } = Form
-const BASE_INFO_STORAGE_KEY = 'wc-base-info'
+import Field from '@/lib/Field'
+import { useLocalStorageState } from 'ahooks'
+import { TEXT_CALORIE } from '@/constants/text'
+
+const BASE_INFO_GENDER_STORAGE_KEY = 'wc-base-info-gender'
+const BASE_INFO_AGE_STORAGE_KEY = 'wc-base-info-age'
+const BASE_INFO_HEIGHT_STORAGE_KEY = 'wc-base-info-height'
+const BASE_INFO_WEIGHT_STORAGE_KEY = 'wc-base-info-weight'
+const BASE_INFO_FREQUENCY_STORAGE_KEY = 'wc-base-info-frequency'
 
 export interface BMROptions {
   gender: Gender
@@ -24,111 +39,131 @@ export interface BaseInfoProps {
 
 const BaseInfo: React.FC<BaseInfoProps> = (props: BaseInfoProps) => {
   const { onChange } = props
-  const [form] = Form.useForm()
-  const gender: Gender = Form.useWatch('gender', form)
-  const age: number = Form.useWatch('age', form)
-  const height: number = Form.useWatch('height', form)
-  const weight: number = Form.useWatch('weight', form)
-  const frequency: TDEECoefficientKeys = Form.useWatch('frequency', form)
+  const commonFieldProps = {
+    width: '100px',
+    textAlign: 'right' as 'right'
+  }
+  const [gender, setGender] = useLocalStorageState<Gender>(
+    BASE_INFO_GENDER_STORAGE_KEY
+  )
+  const handleSetGender = (val: RadioValue): void => setGender(val as Gender)
+  const [age, setAge] = useLocalStorageState<number>(BASE_INFO_AGE_STORAGE_KEY)
+  const handleSetAge = (val: InputNumberValue): void => setAge(val as number)
+  const [height, setHeight] = useLocalStorageState<number>(
+    BASE_INFO_HEIGHT_STORAGE_KEY
+  )
+  const handleSetHeight = (val: InputNumberValue): void =>
+    setHeight(val as number)
+  const [weight, setWeight] = useLocalStorageState<number>(
+    BASE_INFO_WEIGHT_STORAGE_KEY
+  )
+  const handleSetWeight = (val: InputNumberValue): void =>
+    setWeight(val as number)
+  const [frequency, setFrequency] = useLocalStorageState<TDEECoefficientKeys>(
+    BASE_INFO_FREQUENCY_STORAGE_KEY
+  )
+  const handleSetFrequency = (val: SelectValue): void =>
+    setFrequency(val as TDEECoefficientKeys)
 
   const needCalcBMR = !!(gender && age && height && weight)
   const needCalcTdee = !!(needCalcBMR && frequency)
 
-  const bmrOptions = { gender, age, height, weight }
-  const bmr = needCalcBMR
-    ? calcBMR(bmrOptions)
-    : undefined
+  const bmrOptions = needCalcBMR ? { gender, age, height, weight } : undefined
+  const bmr = bmrOptions ? calcBMR(bmrOptions) : undefined
   const tdee = needCalcTdee ? calcTDEE(bmr as number, frequency) : undefined
   const intake = tdee ? keep2decimals(tdee - 500) : undefined
 
   useEffect(() => {
-    onChange?.(bmrOptions, needCalcTdee)
-  }, [needCalcTdee])
-
-  useEffect(() => {
-    const baseInfoStr = localStorage.getItem(BASE_INFO_STORAGE_KEY)
-    if (!baseInfoStr) {
-      return
+    if (bmrOptions) {
+      onChange?.(bmrOptions, needCalcTdee)
     }
-
-    const baseInfo = JSON.parse(baseInfoStr)
-    form.setFieldsValue(baseInfo)
-  }, [])
-
-  useEffect(() => {
-    localStorage.setItem(BASE_INFO_STORAGE_KEY, JSON.stringify({ ...bmrOptions, frequency }))
-  }, [gender, age, height, weight, frequency])
+  }, [needCalcTdee])
 
   return (
     <div className="base-info">
-      <Form form={form}>
-        <FormItem name="gender" label="性别">
-          <Radio.Group>
+      <div>
+        <Field label="性别" {...commonFieldProps}>
+          <Radio.Group value={gender} onChange={handleSetGender}>
             <Radio value="man">男</Radio>
             <Radio value="woman">女</Radio>
           </Radio.Group>
-        </FormItem>
-        <FormItem name="height" label="身高">
-          <InputNumber className="w-xs" suffix="cm" />
-        </FormItem>
-        <FormItem name="weight" label="体重">
-          <InputNumber className="w-xs" suffix="kg" />
-        </FormItem>
-        <FormItem name="age" label="年龄">
-          <InputNumber className="w-xs" />
-        </FormItem>
-        <FormItem name="frequency" label="锻炼频率">
-          <Select className="w-xs" options={TDEEOptions}></Select>
-        </FormItem>
-      </Form>
+        </Field>
+
+        <Field label="身高" {...commonFieldProps}>
+          <InputNumber
+            value={height}
+            onChange={handleSetHeight}
+            className="w-xs"
+            suffix="cm"
+          />
+        </Field>
+
+        <Field label="体重" {...commonFieldProps}>
+          <InputNumber
+            value={weight}
+            onChange={handleSetWeight}
+            className="w-xs"
+            suffix="kg"
+          />
+        </Field>
+
+        <Field label="年龄" {...commonFieldProps}>
+          <InputNumber value={age} onChange={handleSetAge} className="w-xs" />
+        </Field>
+
+        <Field label="锻炼频率" {...commonFieldProps}>
+          <Select
+            className="w-xs"
+            options={TDEEOptions}
+            value={frequency}
+            onChange={handleSetFrequency}
+          ></Select>
+        </Field>
+      </div>
+
       <Divider></Divider>
-      <Form>
+
+      <div>
         {needCalcBMR && (
-          <FormItem label="BMR">
-            <span
-              className="w-heat-number mr-1 heat-number"
-              style={{ width: '80px', background: '#000' }}
-            >
+          <Field label="BMR" {...commonFieldProps}>
+            <span className="intake-block mr-1 heat-number bg-black">
               {bmr}
             </span>
-            卡路里
-          </FormItem>
+            {TEXT_CALORIE}
+          </Field>
         )}
 
         {needCalcTdee && (
           <>
-            <FormItem label="TDEE">
+            <Field label="TDEE" {...commonFieldProps}>
               <span
-                className="w-heat-number mr-1 heat-number"
-                style={{ width: '80px', background: '#000' }}
+                className="intake-block mr-1 heat-number bg-black"
               >
                 {tdee}
               </span>
               卡路里
-            </FormItem>
+            </Field>
 
-            <FormItem label="热量缺口">
+            <Field label="热量缺口" {...commonFieldProps}>
               <span
-                className="w-heat-number mr-1 heat-number"
-                style={{ width: '80px', background: 'rgb(248, 113, 113)' }}
+                className="intake-block mr-1 heat-number bg-red-400"
               >
                 - 500
               </span>
               卡路里
-            </FormItem>
+            </Field>
 
-            <FormItem label="饮食摄入">
+            <Field label="饮食摄入" {...commonFieldProps}>
               <span
-                className="w-heat-number mr-1 heat-number bg-calorie"
-                style={{ width: '80px' }}
+                className="intake-block mr-1 heat-number bg-calorie"
               >
                 {intake}
               </span>
               卡路里
-            </FormItem>
+            </Field>
           </>
         )}
-      </Form>
+      </div>
     </div>
   )
 }

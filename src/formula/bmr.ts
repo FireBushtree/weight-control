@@ -13,12 +13,13 @@ export interface CalcBMROptions {
    */
   weight: number
   age: number
+  gender?: Gender
 }
 
 /**
  * BMR formual source https://zhuanlan.zhihu.com/p/137357908
  */
-export function calcBMR (options: CalcBMROptions & { gender?: Gender }): number | undefined {
+export function calcBMR (options: CalcBMROptions): number | undefined {
   const funcMap = {
     man: calcMenBMR,
     woman: calcWomenBMR
